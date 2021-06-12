@@ -4,7 +4,7 @@ import { UserContext } from '../utils/UserContext'
 
 const Welcome = () => {
 
-    const {user, setUser} = useContext(UserContext)
+    const {user} = useContext(UserContext)
     let history = useHistory()
 
     const click = (location) => {

@@ -1,3 +1,4 @@
+import { Redirect } from "react-router";
 
 const NavigationBar = ({loggedin, func: logout }) => {
 
@@ -7,29 +8,30 @@ const NavigationBar = ({loggedin, func: logout }) => {
 
     return (
         <div>
-            <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-            <div class="container-fluid">
-                <a class="navbar-brand" style={fontStyle} >Prosfero</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
+            <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
+            <div className="container-fluid">
+                <span className="navbar-brand" style={fontStyle} >Prosfero</span>
+                <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span className="navbar-toggler-icon"></span>
                 </button>
-                <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav">
+                <div className="collapse navbar-collapse" id="navbarNav">
+                <ul className="navbar-nav">
                     {loggedin ? 
                     <>
-                    <li class="nav-item">
-                    <a class="nav-link" href="/profile">Profile</a>
+                    <li className="nav-item">
+                    <a className="nav-link" href="/profile">Profile</a>
                     </li>
-                    <li class="nav-item">
-                    <a class="nav-link" href='/login' onClick={() => logout()}>Logout</a>
+                    <li className="nav-item">
+                    <span className="nav-link" onClick={() => {logout() 
+                    return <Redirect to='/login'/>}} >Logout</span>
                     </li> 
                     </> : 
                     <>
-                    <li class="nav-item">
-                    <a class="nav-link" href="/registration">Register</a>
+                    <li className="nav-item">
+                    <a className="nav-link" href="/registration">Register</a>
                     </li> 
-                    <li class="nav-item">
-                    <a class="nav-link" href="/login">Login</a>
+                    <li className="nav-item">
+                    <a className="nav-link" href="/login">Login</a>
                     </li> 
                     </>
                     }

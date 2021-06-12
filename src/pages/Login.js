@@ -39,19 +39,25 @@ const Login = () => {
 
         prescenseCheck(state.username, "Please enter the username") &&
         prescenseCheck(state.password,"Please enter the password")) {
-
-        console.log(state)
         
-
         axios.post(url, {
             username: state.username,
             password: state.password
         }
         ).then(
             res => {
-                setUser(res.data.token)
-                console.log(res.data)
-                history.push("/profile")
+                if (res.data.error === undefined) {
+                    localStorage.setItem("prosfero-token", res.data.token)
+                    setUser(
+                        {
+                            token: res.data.token,
+                            expired: false
+                        }
+                        )
+                    history.push("/profile")
+                } else {
+                    alert(res.data.error)
+                }
             }
         ).catch(
             err => alert(err)

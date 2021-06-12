@@ -11,7 +11,8 @@ import WelcomeRouter from './utils/WelcomeRouter';
 
 function App() {
 
-  const [user, setUser] = useState(null);
+  // Is this fecthing the token in each render??
+  const [user, setUser] = useState({token : localStorage.getItem('prosfero-token')});
 
   const value = useMemo(() => ({ user, setUser }), [user, setUser])
 
