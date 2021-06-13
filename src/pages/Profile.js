@@ -10,9 +10,24 @@ const Profile = () => {
 
     const {user, setUser} = useContext(UserContext)
 
-    const [profile, setProfile] = useState(null)
+    const [profile, setProfile] = useState({})
 
-    const url = 'http://localhost:5000/api/v1/users/profile'
+    const url = 'http://localhost:5000/api/v1/profile'
+
+    const formatDate = (d) => {
+        const date = new Date(d)
+        var dd = date.getDate();
+        var mm = date.getMonth() + 1;
+  
+        var yyyy = date.getFullYear();
+        if (dd < 10) {
+            dd = '0' + dd;
+        }
+        if (mm < 10) {
+            mm = '0' + mm;
+        }
+        return dd + '/' + mm + '/' + yyyy;
+    }
 
 
     useEffect(() => {
@@ -26,10 +41,10 @@ const Profile = () => {
             }
             ).then(
                 res => {
-                    console.log(res.data)
+                    setProfile(res.data)
                 }
             ).catch(
-                err => console.log(err)
+                err => alert(err)
             )
     }, [])
 
@@ -58,21 +73,21 @@ const Profile = () => {
                             <div className="profile-box text-center">
                                 <div>
                                     <h6 style={{fontWeight: 'bold'}}>Name</h6>
-                                    <p>David Spade</p>
+                                    <p>{`${profile.firstName} ${profile.lastName}`}</p>
                                 </div>
                                 <div>
                                     <h6 style={{fontWeight: 'bold'}}>Email</h6>
-                                    <p>example@example.com</p>
+                                    <p>{profile.email}</p>
                                 </div>
                                 <div>
-                                    <h6 style={{fontWeight: 'bold'}}>Date Jonined</h6>
-                                    <p>25th July 2021</p>
+                                    <h6 style={{fontWeight: 'bold'}}>Date Joined</h6>
+                                    <p>{formatDate(profile.createdAt)}</p>
                                 </div>
                             </div>                          
                         </div>
                         <div className="col text-center" style={{margin: '1rem'}}>
                             <img className='profile-picture' src={pic} alt='profile pif'/>
-                            <h2 style={{fontFamily:'Dancing Script', marginTop: '1rem'}}>David23</h2>
+                            <h2 style={{fontFamily:'Dancing Script', marginTop: '1rem'}}>{profile.username}</h2>
                         </div>
                         <div className="col">
                             <div className="text-center" style={{fontFamily: 'Dancing Script'}}>
@@ -89,7 +104,7 @@ const Profile = () => {
                                 </div>
                                 <div>
                                     <h6 style={{fontWeight: 'bold'}}>Achievement Level</h6>
-                                    <p>Newbie</p>
+                                    <p>{profile.achievementLevel}</p>
                                 </div>
                             </div>
                         </div>
@@ -97,20 +112,6 @@ const Profile = () => {
 
                 </div>
             </div>
-
-                
-{/*             <div className='profile-box'>
-                <h1 style={{fontFamily: 'Dancing Script', fontSize: '3rem'}}>{user.username}</h1>
-                <p style={{fontFamily: 'Dancing Script', fontSize: '1.5rem'}}>Your profile</p>
-                <br />
-                <ul className="list-group list-group-flush">
-                    <li className="list-group-item"><span style={{fontWeight: 'bold'}} >First Name:</span> {user.firstName}</li>
-                    <li className="list-group-item"><span style={{fontWeight: 'bold'}} >Last Name:</span> {user.lastName}</li>
-                    <li className="list-group-item"><span style={{fontWeight: 'bold'}} >Email:</span> {user.email}</li>
-                    <li className="list-group-item"><span style={{fontWeight: 'bold'}} >Posts:</span> 0</li>
-                    <li className="list-group-item"><span style={{fontWeight: 'bold'}} >Achievement Level:</span> NEWBIE</li>
-                </ul>
-            </div> */}
         </>
     )
 }
