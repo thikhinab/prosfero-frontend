@@ -11,7 +11,7 @@ const Welcome = () => {
         history.push(`${location}`)
     } 
 
-    if(user) {
+    if(user.token !== null) {
         return <Redirect to='/profile'/>
     }
 

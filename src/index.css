@@ -80,7 +80,7 @@ form {
 }
 
 .profile-picture {
-    max-width: 160px;
+    width: 160px;
     border-radius: 10rem;
 
 }

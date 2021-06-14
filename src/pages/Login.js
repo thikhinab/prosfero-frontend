@@ -8,6 +8,8 @@ const Login = () => {
 
     let history = useHistory();
 
+    document.body.style = 'background: white'
+
     const {user, setUser} = useContext(UserContext)
 
     const url = 'http://localhost:5000/api/v1/users/login'
@@ -75,8 +77,8 @@ const Login = () => {
 
     return (
         <>
-        {user ? <Redirect to='profile'/> : <>
-        <NavigationBar loggedin={user}/>
+        {user.token !== null ? <Redirect to='profile'/> : <>
+        <NavigationBar loggedin={false}/>
                 <form className='login-form'>
                     <div className='text-center'>
                         <h1 id='login-title' style={{fontFamily: 'Dancing Script', fontSize: '3rem'}}>Login</h1>

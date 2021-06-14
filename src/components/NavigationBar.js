@@ -1,6 +1,8 @@
-import { Redirect } from "react-router";
+import { useHistory } from 'react-router-dom'
 
 const NavigationBar = ({loggedin, func: logout }) => {
+
+    const history = useHistory()
 
     const fontStyle = {
         fontFamily: 'Dancing Script',
@@ -22,8 +24,10 @@ const NavigationBar = ({loggedin, func: logout }) => {
                     <a className="nav-link" href="/profile">Profile</a>
                     </li>
                     <li className="nav-item">
-                    <span className="nav-link" onClick={() => {logout() 
-                    return <Redirect to='/login'/>}} >Logout</span>
+                    <span className="nav-link" onClick={() => { 
+                    logout()
+                    history.push('/login')
+                    }} >Logout</span>
                     </li> 
                     </> : 
                     <>
