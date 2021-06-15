@@ -76,8 +76,7 @@ const Profile = () => {
 
 
     useEffect(() => {
-        console.log(user.token)
-        if (user !== null)
+        if (user.token !== null)
         axios.get(url,
             {
                headers: {
@@ -97,7 +96,7 @@ const Profile = () => {
 
 
     
-    if (!user || user.expired) {
+    if (!user.token || user.expired) {
         return <Redirect to='/login' />
     }
 
