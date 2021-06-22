@@ -6,7 +6,7 @@
     height: 100vh;
 }
 
-form {
+#external-form {
     background-color: 	 #b3e0ff;
 }
 
@@ -32,6 +32,7 @@ form {
 
 
 .login-form { 
+    background-color: 	 #b3e0ff;
     margin: auto;
     margin-top: 2rem;
     max-width: 20rem;
@@ -41,7 +42,8 @@ form {
     border-color: white;
 }
 
-.registration-form { 
+.registration-form {
+    background-color: 	 #b3e0ff; 
     margin: auto;
     margin-top: 2rem;
     max-width: 20rem;

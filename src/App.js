@@ -1,4 +1,3 @@
-import './App.css';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import { useMemo, useState } from 'react'
 
@@ -8,6 +7,7 @@ import Registration from './pages/Registration'
 import { UserContext } from './utils/UserContext'
 import Welcome from './pages/Welcome';
 import WelcomeRouter from './utils/WelcomeRouter';
+import CreatePost from './pages/CreatePost';
 
 function App() {
 
@@ -24,6 +24,7 @@ function App() {
           <Route path='/profile' exact component={Profile} />
           <Route path='/registration' exact component={Registration} />
           <Route path='/welcome' exact component={Welcome} />
+          <Route path='/createpost'exact component={CreatePost} />
           <Route path='/' component={WelcomeRouter} />
         </Switch>
       </Router>
