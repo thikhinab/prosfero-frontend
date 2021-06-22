@@ -8,6 +8,7 @@ import { UserContext } from './utils/UserContext'
 import Welcome from './pages/Welcome';
 import WelcomeRouter from './utils/WelcomeRouter';
 import CreatePost from './pages/CreatePost';
+import Home from './pages/Home';
 
 function App() {
 
@@ -25,6 +26,7 @@ function App() {
           <Route path='/registration' exact component={Registration} />
           <Route path='/welcome' exact component={Welcome} />
           <Route path='/createpost'exact component={CreatePost} />
+          <Route path='/home' exact component={Home} />
           <Route path='/' component={WelcomeRouter} />
         </Switch>
       </Router>

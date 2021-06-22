@@ -7,6 +7,7 @@ import NavigationBar from "../components/NavigationBar"
 const Registration = () => {
 
     const {user, setUser} = useContext(UserContext)
+    document.body.style = 'background: white'
 
     let history = useHistory();
 
@@ -64,7 +65,7 @@ const Registration = () => {
 
     return (
         <>
-            <NavigationBar loggedin={user}/>
+            <NavigationBar loggedin={false}/>
                 <form className='registration-form'>
                     <div className='text-center'>
                         <h1 id='registration-title' style={{fontFamily: 'Dancing Script', fontSize: '3rem'}}>Registration</h1>
