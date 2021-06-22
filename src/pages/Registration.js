@@ -1,4 +1,4 @@
-import { useContext, useState } from "react"
+import { useContext, useState, useEffect } from "react"
 import axios from 'axios'
 import { useHistory } from 'react-router-dom'
 import { UserContext } from "../utils/UserContext"
@@ -7,7 +7,6 @@ import NavigationBar from "../components/NavigationBar"
 const Registration = () => {
 
     const {user, setUser} = useContext(UserContext)
-    setUser(null)
 
     let history = useHistory();
 
@@ -55,6 +54,12 @@ const Registration = () => {
             password: '',
         })
     }
+
+
+    useEffect(() => {
+        localStorage.removeItem('token')
+        setUser({token : localStorage.getItem('prosfero-token')})
+    }, []) 
 
 
     return (
