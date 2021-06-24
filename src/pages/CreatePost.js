@@ -4,11 +4,13 @@ import NavigationBar from "../components/NavigationBar"
 import '../style/CreatePost.css'
 import axios from 'axios'
 import { Redirect } from "react-router"
+import { useHistory } from "react-router-dom"
 
 
 const CreatePost = () => {
 
     const {user, setUser} = useContext(UserContext)
+    const history = useHistory()
     const url = 'http://localhost:5000/api/v1/posts'
     const [image, setImage] = useState({
         file: null
@@ -37,7 +39,7 @@ const CreatePost = () => {
             data.append('file', files)
             data.append('upload_preset', 'prosfero')
 
-            axios.post(process.env.URL,
+            axios.post("https://api.cloudinary.com/v1_1/drv2gra8s/image/upload",
             data).then(res => {
                 const file = res.data
                 const newState = {...state}
@@ -78,6 +80,7 @@ const CreatePost = () => {
             ).then(
             res => {
                 alert('Post submitted!')
+                history.push(`/post/${res.data.id}`)
             }
         ).catch(
             err => alert(err)
@@ -131,7 +134,7 @@ const CreatePost = () => {
                     {
                         state.image  && 
                         <div className='text-center'>
-                            <img src={state.image} className="img-thumbnail" alt="..." />
+                            <img src={state.image} className="img-thumbnail" alt="image" />
                         </div>
                         
                     }
