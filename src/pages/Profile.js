@@ -156,11 +156,11 @@ const Profile = () => {
                             <div className="profile-box text-center">
                                 <div>
                                     <h6 style={{fontWeight: 'bold'}}>Posts</h6>
-                                    <p>10</p>
+                                    <p>{profile.noOfPosts}</p>
                                 </div>
                                 <div>
                                     <h6 style={{fontWeight: 'bold'}}>Requests</h6>
-                                    <p>2</p>
+                                    <p>-</p>
                                 </div>
                                 <div>
                                     <h6 style={{fontWeight: 'bold'}}>Achievement Level</h6>
