@@ -106,7 +106,12 @@ const Profile = () => {
             <NavigationBar loggedin={true} func={() => 
                 {
                     localStorage.removeItem('prosfero-token')
-                    setUser({token: null})
+                    localStorage.removeItem('prosfero-id')
+                    setUser(
+                        {
+                            token : null,
+                            id : null
+                        })
                 }
             }/>
             <div className='profile-background'>

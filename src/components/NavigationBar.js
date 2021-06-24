@@ -24,6 +24,9 @@ const NavigationBar = ({loggedin, func: logout }) => {
                     <a className="nav-link" href="/profile">Profile</a>
                     </li>
                     <li className="nav-item">
+                    <a className="nav-link" href="/createpost">Create Post</a>
+                    </li>
+                    <li className="nav-item">
                     <span className="nav-link" onClick={() => { 
                     history.push("/createpost")
                     }} >New Post</span>

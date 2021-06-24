@@ -50,9 +50,11 @@ const Login = () => {
             res => {
                 if (res.data.error === undefined) {
                     localStorage.setItem("prosfero-token", res.data.token)
+                    localStorage.setItem("prosfero-id", res.data.id)
                     setUser(
                         {
                             token: res.data.token,
+                            id: res.data.id,
                             expired: false
                         }
                         )

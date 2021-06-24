@@ -58,8 +58,13 @@ const Registration = () => {
 
 
     useEffect(() => {
-        localStorage.removeItem('token')
-        setUser({token : localStorage.getItem('prosfero-token')})
+        localStorage.removeItem('prosfero-token')
+        localStorage.removeItem('prosfero-id')
+        setUser(
+            {
+                token : localStorage.getItem('prosfero-token'),
+                id : localStorage.getItem('prosfero-id')
+            })
     }, []) 
 
 
