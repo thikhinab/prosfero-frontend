@@ -13,7 +13,12 @@ import Home from './pages/Home';
 function App() {
 
   // Is this fecthing the token in each render??
-  const [user, setUser] = useState({token : localStorage.getItem('prosfero-token')});
+  const [user, setUser] = useState(
+    {
+      token : localStorage.getItem('prosfero-token'),
+      id : localStorage.getItem('prosfero-id')
+    }
+    );
 
   const value = useMemo(() => ({ user, setUser }), [user, setUser])
 
