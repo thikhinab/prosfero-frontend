@@ -10,6 +10,7 @@ import WelcomeRouter from './utils/WelcomeRouter';
 import CreatePost from './pages/CreatePost';
 import Home from './pages/Home';
 import Post from './pages/Post'
+import EditPost from './pages/EditPost'
 
 function App() {
 
@@ -34,6 +35,7 @@ function App() {
           <Route path='/createpost'exact component={CreatePost} />
           <Route path='/home' exact component={Home} />
           <Route path= '/post/:postId'exact component={Post} />
+          <Route path='/editpost/:postId' exact component={EditPost} />
           <Route path='/' component={WelcomeRouter} />
         </Switch>
       </Router>

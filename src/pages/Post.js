@@ -1,11 +1,10 @@
 import { useContext, useEffect, useState } from 'react'
 import { Redirect } from 'react-router'
 import { UserContext } from '../utils/UserContext'
-import { useParams, useHistory } from 'react-router-dom'
+import { useParams, useHistory, Link } from 'react-router-dom'
 import axios from 'axios'
 import NavigationBar from '../components/NavigationBar'
 import '../style/Post.css'
-import img from '../demo/1.jpg'
 
 
 const Post = () => {
@@ -70,7 +69,7 @@ const Post = () => {
                             <p>Category: {state.category}</p>
                             <p>Created at: {new Date(state.createdAt).toUTCString()}</p>
                             <div className="text-center">
-                                { state.userid === user.id ? <button type="button" class="btn btn-primary">Edit</button> : <button type="button" class="btn btn-success">Request</button>}
+                                { state.userid === user.id ? <Link class="btn btn-primary" to={`/editpost/${postId}`}>Edit</Link> : <Link class="btn btn-primary" to={``}>Request</Link>}
                             </div>
                         </div>
                     </div>
