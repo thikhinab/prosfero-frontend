@@ -1,18 +1,50 @@
+import { useContext, useState, useEffect } from "react"
+import { UserContext } from '../utils/UserContext'
+import NavigationBar from "../components/NavigationBar"
+import '../style/CreatePost.css'
+import axios from 'axios'
+import { Redirect } from "react-router"
+import { useHistory, useParams } from "react-router-dom"
+
 const EditPost = () => {
+
+        const { postId } = useParams()
+
+        const url = `http://localhost:5000/api/v1/posts/${postId}`
+
+        const [state, setState] = useState('')
+
+        useEffect(() => {
+            axios.get(url,
+                {
+                   headers: {
+                       'Authorization': `Bearer ${user.token}` 
+                   } 
+                }
+                ).then(
+                    res => {
+
+                        if(res.data.userid !== user.id) {
+                            alert('Unathorized')
+                            history.push('/home')
+                        }
+
+                        setState(res.data)
+                    }
+                ).catch(
+                    err => {alert(err)
+                    history.push('/home')}
+                )
+        }, [])
 
         const {user, setUser} = useContext(UserContext)
         const history = useHistory()
-        const url = 'http://localhost:5000/api/v1/posts'
+
         const [image, setImage] = useState({
             file: null
         })
     
-        const [state, setState] = useState({
-            title: '',
-            category: '',
-            description: '',
-            image: ''
-        })
+
     
         const fileSelectedHandler = e => {
             setImage({
@@ -58,9 +90,9 @@ const EditPost = () => {
         const onSubmit = (e) => {
             e.preventDefault();
     
-            axios.post(url, {
+            axios.put(url, {
                 title: state.title,
-                desc: state.description,
+                desc: state.desc,
                 category: state.category,
                 image: state.image
             }, 
@@ -70,8 +102,9 @@ const EditPost = () => {
                 }
                 ).then(
                 res => {
-                    alert('Post submitted!')
-                    history.push(`/post/${res.data.id}`)
+                    alert('Post updated!')
+                    console.log(res.data)
+                    history.push(`/post/${postId}`)
                 }
             ).catch(
                 err => alert(err)
@@ -99,16 +132,13 @@ const EditPost = () => {
                 <div className ='form-pad'>
                     <form className='form-post'>
                         <div className="text-center">
-                            <h1 style={{fontFamily: 'Dancing Script'}}>Create Your Post</h1>
-                        </div>     
-                        <div className="mb-3">
-                            <label htmlFor="title" className="form-label">Title</label>
-                            <input type="text" className="form-control" id="title" name='title' onChange={e => change(e)} value={state.title} placeholder="Enter the title of your post" />
+                            <h1 style={{fontFamily: 'Dancing Script'}}>Edit Post</h1>
                         </div>
+                        <h3>Title: {state.title}</h3>     
                         <div className="mb-3">
                             <select className="form-select" name="category" value={state.category} onChange={e => change(e)} aria-label="choose chatergory">
-                                <option value='' defaultValue disabled>Choose category</option>
-                                <option value="Food">Food</option>
+                                <option value='' disabled>Choose category</option>
+                                <option value="Food" >Food</option>
                                 <option value="Electronics">Electronics</option>
                                 <option value="Stationary">Stationary</option>
                                 <option value="Furniture">Furniture</option>
@@ -116,7 +146,7 @@ const EditPost = () => {
                         </div>
                         <div className="mb-3">
                             <label htmlFor="description" className="form-label">Descripton of Item</label>
-                            <textarea className="form-control" id="description" rows="3" name='description' onChange={e => change(e)} value={state.description}></textarea>
+                            <textarea className="form-control" id="description" rows="3" name='desc' onChange={e => change(e)} value={state.desc}></textarea>
                         </div>
                         <div className="input-group mb-3">
                             <input type="file" className="form-control" name="image" onChange={e => fileSelectedHandler(e)} id="image" />
@@ -131,7 +161,7 @@ const EditPost = () => {
                         }
     
                         <div className="text-center">
-                            <button type="submit" className="btn btn-primary" onClick={e => onSubmit(e)}>Submit</button>
+                            <button type="submit" className="btn btn-primary" onClick={e => onSubmit(e)}>Update</button>
                         </div>
                     </form>
                     
