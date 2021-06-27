@@ -21,6 +21,9 @@ const NavigationBar = ({loggedin, func: logout }) => {
                     {loggedin ? 
                     <>
                     <li className="nav-item">
+                    <a className="nav-link" href="/home">Home</a>
+                    </li>
+                    <li className="nav-item">
                     <a className="nav-link" href="/profile">Profile</a>
                     </li>
                     <li className="nav-item">
