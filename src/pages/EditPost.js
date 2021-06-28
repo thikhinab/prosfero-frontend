@@ -142,6 +142,7 @@ const EditPost = () => {
                                 <option value="Electronics">Electronics</option>
                                 <option value="Stationary">Stationary</option>
                                 <option value="Furniture">Furniture</option>
+                                <option value="Other">Other</option>
                             </select>
                         </div>
                         <div className="mb-3">
