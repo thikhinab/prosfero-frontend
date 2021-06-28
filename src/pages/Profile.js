@@ -16,8 +16,10 @@ const Profile = () => {
     const [file, setFile] = useState('')
 
     const [profile, setProfile] = useState({})
+    const [requests, setRequests] = useState([])
 
     const url = 'http://localhost:5000/api/v1/profile'
+    const reqsurl = 'http://localhost:5000/api/v1/requests'
 
 
     const fileSelectedHandler = e => {
@@ -34,7 +36,7 @@ const Profile = () => {
             data.append('file', files)
             data.append('upload_preset', 'prosfero')
 
-            axios.post(process.env.CLOUD_URL,
+            axios.post("https://api.cloudinary.com/v1_1/drv2gra8s/image/upload",
             data).then(res => {
                 const file = res.data
                 setImage(file.secure_url)
@@ -92,7 +94,35 @@ const Profile = () => {
                 err => alert(err)
             )
             document.body.style = 'background: #b3e0ff;';
+
+            axios.get(reqsurl,
+                {
+                    headers: {
+                        'Authorization': `Bearer ${user.token}` 
+                    } 
+                 }).then( res => {
+                setRequests(res.data)
+            }).catch(
+                err => alert(err)
+            )
     }, [])
+
+    const createReqData = (reqData) => {
+        return (
+            // <div class="container px-4">
+            //     <div class="row gx-5">
+                    <div class="col">
+                        <div class="p-3 border bg-light"> <b>{reqData[0]}</b> <br/>By <i>{reqData[1]}</i> <br/> {reqData[2]} </div>
+                    </div>
+                    //  <div class="col">
+                    //      <div class="p-3 border bg-light">{reqData[1]}</div>
+                    // </div>
+                    // <div class="col">
+                    //      <div class="p-3 border bg-light">{reqData[2]}</div>
+                    // </div>
+            //     </div>
+            // </div>
+        )}
 
 
     
@@ -165,7 +195,7 @@ const Profile = () => {
                                 </div>
                                 <div>
                                     <h6 style={{fontWeight: 'bold'}}>Requests</h6>
-                                    <p>-</p>
+                                    <p>{requests.length}</p>
                                 </div>
                                 <div>
                                     <h6 style={{fontWeight: 'bold'}}>Achievement Level</h6>
@@ -174,7 +204,34 @@ const Profile = () => {
                             </div>
                         </div>
                     </div>
-
+                </div>
+                <div style={{color: '#b3e0ff'}}>
+                    ...
+                </div>
+                <div className="container profile">
+                    <div className="text-center" style={{fontFamily: 'Dancing Script'}}>
+                            <h2>Your Post Requests</h2>
+                    </div>
+                    {/* <div class="container px-4">
+                        <div class="row gx-5">
+                            <div class="col">
+                                <div class="p-3 border bg-light">Requested Item</div>
+                            </div>
+                            <div class="col">
+                                <div class="p-3 border bg-light">Requested By</div>
+                            </div>
+                            <div class="col">
+                                <div class="p-3 border bg-light">Request Details</div>
+                            </div>
+                        </div>
+                    </div> */}
+                <div class="container px-4">
+                    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4 gx-5">
+                    { requests &&
+                       requests.map(item => createReqData(item))
+                    }
+                    </div>
+                </div>
                 </div>
             </div>
         </>

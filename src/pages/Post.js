@@ -13,9 +13,43 @@ const Post = () => {
 
     const history = useHistory()
 
-    const [state, setState] = useState('') 
-
     const { postId } = useParams()
+
+    const [state, setState] = useState({
+        text : ''
+    }) 
+
+    const change = (e) => {    
+        const newState = {...state}
+        newState[e.target.name] = e.target.value
+        setState(newState)
+    }
+
+    const formUrl = `http://localhost:5000/api/v1/posts/requests/${postId}`
+
+    const onSubmit = (e) => {
+        e.preventDefault();
+
+        axios.post(formUrl, {
+            text : state.text
+        }, 
+            {
+                 headers: {
+            'Authorization': `Bearer ${user.token}`}
+            }
+            ).then(
+            res => {
+                alert('Request submitted!')
+            }
+        ).catch(
+           err => {
+               err.response && alert(err.response.data) 
+               console.log(err)
+            }
+        )
+    }
+
+    const [showForm, setShowForm] = useState(false)
 
     const url = `http://localhost:5000/api/v1/posts/${postId}`
 
@@ -69,7 +103,20 @@ const Post = () => {
                             <p>Category: {state.category}</p>
                             <p>Created at: {new Date(state.createdAt).toUTCString()}</p>
                             <div className="text-center">
-                                { state.userid === user.id ? <Link class="btn btn-primary" to={`/editpost/${postId}`}>Edit</Link> : <Link class="btn btn-primary" to={``}>Request</Link>}
+                                { state.userid === user.id ? <Link class="btn btn-primary" to={`/editpost/${postId}`}>Edit</Link> : 
+                                <div
+                                class="btn btn-primary"
+                                onClick={() => setShowForm(!showForm)}
+                                >Request</div> }
+                                {showForm && 
+                                    <div className="mb-3">
+                                    <label htmlFor="text" className="form-label">Text</label>
+                                    <input type="text" className="form-control" id="text" name='text' onChange={e => change(e)} value={state.text} placeholder="(Optional) Enter request text" />
+                                    <div className="text-center">
+                                    </div>
+                        <button type="submit" className="btn btn-primary" onClick={e => onSubmit(e)}>Submit</button>
+                    </div>
+                                }
                             </div>
                         </div>
                     </div>

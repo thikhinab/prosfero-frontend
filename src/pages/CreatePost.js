@@ -39,7 +39,7 @@ const CreatePost = () => {
             data.append('file', files)
             data.append('upload_preset', 'prosfero')
 
-            axios.post(process.env.CLOUD,
+            axios.post("https://api.cloudinary.com/v1_1/drv2gra8s/image/upload",
             data).then(res => {
                 const file = res.data
                 const newState = {...state}
