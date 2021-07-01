@@ -112,7 +112,7 @@ const CreatePost = () => {
                     </div>     
                     <div className="mb-3">
                         <label htmlFor="title" className="form-label">Title</label>
-                        <input type="text" className="form-control" id="title" name='title' onChange={e => change(e)} value={state.title} placeholder="Enter the title of your post" />
+                        <input type="text" className="form-control" autoComplete='off' id="title" name='title' onChange={e => change(e)} value={state.title} placeholder="Enter the title of your post" />
                     </div>
                     <div className="mb-3">
                         <select className="form-select" name="category" value={state.category} onChange={e => change(e)} aria-label="choose chatergory">

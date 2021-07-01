@@ -1,69 +1,86 @@
-import { useContext, useState, useEffect } from "react"
+import { useContext, useState, useEffect, useRef } from "react"
 import { UserContext } from '../utils/UserContext'
 import NavigationBar from "../components/NavigationBar"
 import '../style/CreatePost.css'
 import axios from 'axios'
 import { Redirect } from "react-router"
-import { Link} from "react-router-dom"
+import { Link } from "react-router-dom"
 import '../style/Home.css'
 
+const LIMIT = 8
+const BASE_URL = "http://localhost:5000/api/v1/posts"
 
 
 const Home = () => {
 
-  const {user, setUser} = useContext(UserContext)
-  const [reachedEnd, setReachedEnd] = useState(false)
-  const [state, setState] = useState([])
-  const [page, setPage] = useState(1)
-  const [data, setData] = useState({
-    skip: 0,
-    limit: 8
-  })
-
-  const baseUrl = "http://localhost:5000/api/v1/posts"
-
-  const scrollToEnd = () => {
-    setData({
-      skip: data.skip + data.limit,
-      limit: data.limit
-    })
-    setPage(page + 1)
-  }
-
-  window.onscroll = () => {
-    if (!reachedEnd) {
-      if (
-        window.innerHeight + document.documentElement.scrollTop ===
-        document.documentElement.offsetHeight
-      ) {
-        scrollToEnd()
-      }
-    }
-  }
-  
-  useEffect(() => {
-
+  const fetchData = () => {
     const instance = axios.create({
-      baseURL: baseUrl,
+      baseURL: BASE_URL,
       headers: {
         'Authorization': `Bearer ${user.token}`
       }
 
     })
-
-
-    instance.get(`/limited/${data.limit}/${data.skip}`)
+    
+    instance.get(`/limited/${LIMIT}/${skip}`)
     .then(res => {
       if (res.data.length < 8) {
-        setReachedEnd(true)
+          setMore(false)
       }
       setState([...state, ...res.data])
-    }
-    
-    
-    )
+      setSkip(skip + LIMIT)
+      setLoading(false)
+      console.log(skip, more, loading)
+      
+    })
     .catch(err => alert(err))
-}, [page])
+
+}
+
+  const {user, setUser} = useContext(UserContext)
+  const [more, setMore] = useState(true)
+  const [loading, setLoading] = useState(false)
+  const [state, setState] = useState([])
+  const [skip, setSkip] = useState(0)
+  const [element, setElement] = useState(null)
+  const loader = useRef(fetchData)
+
+
+
+  const observer = useRef(new IntersectionObserver((entries) => {
+      const first = entries[0]
+      
+      if (first.isIntersecting) {
+    
+        setLoading(true)
+        loader.current()
+      }
+  }, { rootMargin: '50px', threshold: 0.25}))
+
+  
+  useEffect(() => {
+    loader.current = fetchData
+
+  },  [fetchData])
+
+  useEffect(() => {
+
+    const currentElement = element;
+    const currentObserver = observer.current;
+
+
+    if (currentElement) {
+      currentObserver.observe(currentElement)
+    }
+
+    return () => {
+      if (currentElement) {
+        currentObserver.unobserve(currentElement)
+      }
+    }
+
+  }, [element])
+
 
 
    const createPost = (post) => {
@@ -112,16 +129,24 @@ const Home = () => {
                   })
           }
       }/>
-      <div className="container" style={{marginTop: "1rem"}}>
+      <div className="container" style={{marginTop: "1rem"}} >
           <div className="title text-center" style={{fontFamily: 'Dancing Script', fontWeight: 'bold'}}>
             <h1>The Latest Posts!</h1>
           </div>
-          <div className="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4" >
+          <div className="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4"  id='post-container' >
 
             {
               state.length > 0 && state.map(post => createPost(post))
             }
 
+            {
+              (!loading && more) ? (
+                <div ref={setElement} style={{padding: '2rem'}}></div>
+              )
+              :
+              (<div id='footer' style={{padding: '1rem'}}> </div>)
+
+            }
         </div>
       </div>
       </>

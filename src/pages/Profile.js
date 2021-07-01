@@ -225,13 +225,16 @@ const Profile = () => {
                             </div>
                         </div>
                     </div> */}
-                <div class="container px-4">
-                    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4 gx-5">
-                    { requests &&
-                       requests.map(item => createReqData(item))
+
+                    { requests.length > 0 ?
+                                    <div class="container px-4">
+                                        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4 gx-5">
+                                                {requests.map(item => createReqData(item)) }
+                                        </div>
+                                    </div>
+                                    : <div className='text-center'>No requests yet</div>
                     }
-                    </div>
-                </div>
+
                 </div>
             </div>
         </>
