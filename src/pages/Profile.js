@@ -1,6 +1,6 @@
 import axios from 'axios'
 import React, {useContext, useEffect, useRef, useState} from 'react'
-import { Redirect } from 'react-router-dom'
+import { Link, useHistory, Redirect, Router } from 'react-router-dom'
 import NavigationBar from '../components/NavigationBar'
 import { UserContext } from '../utils/UserContext'
 import Person from '@material-ui/icons/Person'
@@ -9,6 +9,8 @@ import Person from '@material-ui/icons/Person'
 const Profile = () => {
 
     const fileInput = useRef()
+
+    let history = useHistory();
 
     const {user, setUser} = useContext(UserContext)
 
@@ -208,23 +210,13 @@ const Profile = () => {
                 <div style={{color: '#b3e0ff'}}>
                     ...
                 </div>
+                <div className="text-center" >
+                        <Link to="/requests" class="btn btn-primary" >Your Requests</Link>
+                </div>
                 <div className="container profile">
                     <div className="text-center" style={{fontFamily: 'Dancing Script'}}>
                             <h2>Your Post Requests</h2>
                     </div>
-                    {/* <div class="container px-4">
-                        <div class="row gx-5">
-                            <div class="col">
-                                <div class="p-3 border bg-light">Requested Item</div>
-                            </div>
-                            <div class="col">
-                                <div class="p-3 border bg-light">Requested By</div>
-                            </div>
-                            <div class="col">
-                                <div class="p-3 border bg-light">Request Details</div>
-                            </div>
-                        </div>
-                    </div> */}
                 <div class="container px-4">
                     <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4 gx-5">
                     { requests &&
