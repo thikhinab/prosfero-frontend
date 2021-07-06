@@ -4,14 +4,14 @@ import NavigationBar from "../components/NavigationBar";
 import "../style/CreatePost.css";
 import axios from "axios";
 import { Redirect } from "react-router";
-import "../style/Home.css";
-import Card from "../components/Card";
+import Card from "./../components/Card";
 import Filter from "../components/Filter";
+import "../style/Home.css";
 
 const LIMIT = 8;
 const BASE_URL = "http://localhost:5000/api/v1/posts";
 
-const Home = () => {
+const Search = () => {
   const { user, setUser } = useContext(UserContext);
   const [more, setMore] = useState(true);
   const [loading, setLoading] = useState(false);
@@ -25,6 +25,9 @@ const Home = () => {
     id: "latest",
   });
 
+  const params = new URLSearchParams(document.location.search.substring(1));
+  const query = params.get("q");
+
   const fetchData = () => {
     const instance = axios.create({
       baseURL: BASE_URL,
@@ -34,19 +37,24 @@ const Home = () => {
     });
 
     instance
-      .get(`/limited/${LIMIT}/${skip}`, {
+      .get(`/filter`, {
         params: {
+          q: query,
+          limit: LIMIT,
+          skip: skip,
           order: parseInt(sortOrder.value),
         },
       })
       .then((res) => {
         if (res.data.length < 8) {
+          console.log(res.data);
           setMore(false);
         }
-        setState([...state, ...res.data]);
+        const newState = [...state, ...res.data];
+        setState(newState);
         setSkip(skip + LIMIT);
         setLoading(false);
-        showResults(filters);
+        showResults(filters, newState);
       })
       .catch((err) => alert(err));
   };
@@ -68,6 +76,13 @@ const Home = () => {
   );
 
   useEffect(() => {
+    setState([]);
+    setSkip(0);
+    setMore(true);
+    setLoading(false);
+  }, [query]);
+
+  useEffect(() => {
     loader.current = fetchData;
   }, [fetchData]);
 
@@ -86,34 +101,34 @@ const Home = () => {
     };
   }, [element]);
 
-  const showResults = (fil) => {
+  if (!user.token || user.expired) {
+    return <Redirect to="/login" />;
+  }
+
+  const showResults = (fil, list) => {
     if (fil.length > 0) {
-      setFilteredList(state.filter((post) => fil.includes(post.category)));
+      setFilteredList(list.filter((post) => fil.includes(post.category)));
     } else {
-      setFilteredList(state);
+      setFilteredList(list);
     }
   };
 
   const handleFilters = (fil) => {
     const newFilters = fil;
-    showResults(newFilters);
+    showResults(newFilters, state);
     setFilters(newFilters);
   };
 
   const handleOrder = (order) => {
     if (order.value !== setSortOder.value) {
       setSortOder(order);
-      setLoading(false);
-      setMore(true);
       setSkip(0);
       setState([]);
       setFilteredList([]);
+      setLoading(false);
+      setMore(true);
     }
   };
-
-  if (!user.token || user.expired) {
-    return <Redirect to="/login" />;
-  }
 
   return (
     <>
@@ -129,39 +144,41 @@ const Home = () => {
         }}
       />
       <div className="container" style={{ marginTop: "1rem" }}>
-        <div
-          className="title text-center"
-          style={{ fontFamily: "Dancing Script", fontWeight: "bold" }}
-        >
-          <h1>Listings</h1>
+        <div style={{ fontWeight: "bold", paddingBottom: "1rem" }}>
+          <h2>Search Results for "{query}"</h2>
         </div>
         <div className="filter">
           <Filter
-            handleFilters={(filters) => handleFilters(filters, "Category")}
+            handleFilters={(filters) => handleFilters(filters)}
             handleOrder={handleOrder}
             customStyle={filteredList.length === 0 ? { display: "none" } : {}}
           />
         </div>
-        <div
-          className="col row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4"
-          id="post-container"
-        >
-          {filteredList.length > 0 &&
-            filteredList.map((post, index) => (
-              <Card post={post} index={index} />
-            ))}
-
-          {!loading && more ? (
-            <div ref={setElement} style={{ padding: "2rem" }}></div>
-          ) : (
-            <div id="footer" style={{ padding: "1rem" }}>
-              {" "}
+        {filteredList.length > 0 ? (
+          <>
+            <div
+              className="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4"
+              id="post-container"
+            >
+              {filteredList.map((post, index) => (
+                <Card post={post} index={index} />
+              ))}
             </div>
-          )}
-        </div>
+          </>
+        ) : (
+          `Your search "${query}" did not match any listings.`
+        )}
+
+        {!loading && more ? (
+          <div ref={setElement} style={{ padding: "2rem" }}></div>
+        ) : (
+          <div id="footer" style={{ padding: "1rem" }}>
+            {" "}
+          </div>
+        )}
       </div>
     </>
   );
 };
 
-export default Home;
+export default Search;
