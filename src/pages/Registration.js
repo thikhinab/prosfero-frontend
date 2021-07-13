@@ -86,7 +86,7 @@ const Registration = () => {
 
                     </div>
                     <div className="mb-3">
-                        <label className="form-label">Username</label>
+                        <label className="form">Username</label>
                         <input type="text" className="form-control" name="username" onChange={e => change(e)} value={state.username} id="registration-username" />
 
                     </div>

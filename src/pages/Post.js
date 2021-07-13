@@ -109,13 +109,16 @@ const Post = () => {
                                 onClick={() => setShowForm(!showForm)}
                                 >Request</div> }
                                 {showForm && 
+                                <>
                                     <div className="mb-3">
                                     <label htmlFor="text" className="form-label">Text</label>
                                     <input type="text" className="form-control" id="text" name='text' onChange={e => change(e)} value={state.text} placeholder="(Optional) Enter request text" />
                                     <div className="text-center">
                                     </div>
-                        <button type="submit" className="btn btn-primary" onClick={e => onSubmit(e)}>Submit</button>
-                    </div>
+                                    <br/>
+                                    <button type="submit" className="btn btn-primary" onClick={e => onSubmit(e)}>Submit</button>
+                                    </div>
+                                </>
                                 }
                             </div>
                         </div>

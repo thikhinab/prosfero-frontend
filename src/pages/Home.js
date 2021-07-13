@@ -48,7 +48,6 @@ const Home = () => {
       headers: {
         'Authorization': `Bearer ${user.token}`
       }
-
     })
 
 
