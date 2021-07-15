@@ -12,6 +12,7 @@ import Home from "./pages/Home";
 import Post from "./pages/Post";
 import EditPost from "./pages/EditPost";
 import Search from "./pages/Search";
+import Chat from "./pages/Chat";
 
 function App() {
   // Is this fecthing the token in each render??
@@ -34,6 +35,7 @@ function App() {
           <Route path="/home" exact component={Home} />
           <Route path="/post/:postId" exact component={Post} />
           <Route path="/editpost/:postId" exact component={EditPost} />
+          <Route path="/chat" exact component={Chat} />
           <Route path="/search" component={Search} />
           <Route path="/" component={WelcomeRouter} />
         </Switch>
