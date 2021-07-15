@@ -1,56 +1,113 @@
-import { useHistory } from 'react-router-dom'
+import { useState } from "react";
+import { useHistory, Link } from "react-router-dom";
 
-const NavigationBar = ({loggedin, func: logout }) => {
+const NavigationBar = ({ loggedin, func: logout }) => {
+  const history = useHistory();
 
-    const history = useHistory()
+  const [searchString, setSearchString] = useState("");
 
-    const fontStyle = {
-        fontFamily: 'Dancing Script',
-    };
+  const handleChange = (e) => {
+    setSearchString(e.target.value);
+  };
 
-    return (
-        <div>
-            <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
-            <div className="container-fluid">
-                <span className="navbar-brand" style={fontStyle} >Prosfero</span>
-                <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span className="navbar-toggler-icon"></span>
+  const submit = (e) => {
+    e.preventDefault();
+    if (!searchString.replace(/\s/g, "").length || searchString !== "") {
+      return history.push(`/search?q=${searchString}`);
+    }
+  };
+
+  const fontStyle = {
+    fontFamily: "Dancing Script",
+  };
+
+  return (
+    <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
+      <div className="container-fluid">
+        <span className="navbar-brand" style={fontStyle}>
+          Prosfero
+        </span>
+        <button
+          className="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span className="navbar-toggler-icon"></span>
+        </button>
+        <div className="collapse navbar-collapse" id="navbarNav">
+          {loggedin ? (
+            <>
+              <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+                <li className="nav-item">
+                  <Link className="nav-link" to="/home">
+                    Home
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <Link className="nav-link" to="/profile">
+                    Profile
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <Link className="nav-link" to="/createpost">
+                    Create Post
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <span
+                    className="nav-link"
+                    onClick={() => {
+                      logout();
+                      history.push("/login");
+                    }}
+                  >
+                    Logout
+                  </span>
+                </li>
+              </ul>
+              <form className="d-flex" style={{ height: "2.5rem" }}>
+                <input
+                  className="form-control me-2"
+                  type="search"
+                  placeholder="Search"
+                  aria-label="Search"
+                  onChange={handleChange}
+                />
+                <button
+                  className="btn btn-outline-light"
+                  style={{
+                    margin: "0rem",
+                  }}
+                  onClick={submit}
+                >
+                  Search
                 </button>
-                <div className="collapse navbar-collapse" id="navbarNav">
-                <ul className="navbar-nav">
-                    {loggedin ? 
-                    <>
-                    <li className="nav-item">
-                    <a className="nav-link" href="/home">Home</a>
-                    </li>
-                    <li className="nav-item">
-                    <a className="nav-link" href="/profile">Profile</a>
-                    </li>
-                    <li className="nav-item">
-                    <a className="nav-link" href="/createpost">Create Post</a>
-                    </li>
-                    <li className="nav-item">
-                    <span className="nav-link" onClick={() => { 
-                    logout()
-                    history.push('/login')
-                    }} >Logout</span>
-                    </li> 
-                    </> : 
-                    <>
-                    <li className="nav-item">
-                    <a className="nav-link" href="/registration">Register</a>
-                    </li> 
-                    <li className="nav-item">
-                    <a className="nav-link" href="/login">Login</a>
-                    </li> 
-                    </>
-                    }
-                </ul>
-                </div>
-            </div>
-            </nav>
+              </form>
+            </>
+          ) : (
+            <>
+              <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+                <li className="nav-item">
+                  <Link className="nav-link" to="/registration">
+                    Register
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <Link className="nav-link" to="/login">
+                    Login
+                  </Link>
+                </li>
+              </ul>
+            </>
+          )}
         </div>
-    )
-}
+      </div>
+    </nav>
+  );
+};
 
-export default NavigationBar
+export default NavigationBar;

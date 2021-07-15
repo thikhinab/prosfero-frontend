@@ -4,13 +4,35 @@ import NavigationBar from "../components/NavigationBar";
 import "../style/CreatePost.css";
 import axios from "axios";
 import { Redirect } from "react-router";
+<<<<<<< HEAD
 import { Link } from "react-router-dom";
 import "../style/Home.css";
+=======
+import "../style/Home.css";
+import Card from "../components/Card";
+import Filter from "../components/Filter";
+>>>>>>> chat
 
 const LIMIT = 8;
 const BASE_URL = "http://localhost:5000/api/v1/posts";
 
 const Home = () => {
+<<<<<<< HEAD
+=======
+  const { user, setUser } = useContext(UserContext);
+  const [more, setMore] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [state, setState] = useState([]);
+  const [skip, setSkip] = useState(0);
+  const [element, setElement] = useState(null);
+  const [filters, setFilters] = useState([]);
+  const [filteredList, setFilteredList] = useState([]);
+  const [sortOrder, setSortOder] = useState({
+    value: "1",
+    id: "latest",
+  });
+
+>>>>>>> chat
   const fetchData = () => {
     const instance = axios.create({
       baseURL: BASE_URL,
@@ -20,7 +42,15 @@ const Home = () => {
     });
 
     instance
+<<<<<<< HEAD
       .get(`/limited/${LIMIT}/${skip}`)
+=======
+      .get(`/limited/${LIMIT}/${skip}`, {
+        params: {
+          order: parseInt(sortOrder.value),
+        },
+      })
+>>>>>>> chat
       .then((res) => {
         if (res.data.length < 8) {
           setMore(false);
@@ -28,17 +58,24 @@ const Home = () => {
         setState([...state, ...res.data]);
         setSkip(skip + LIMIT);
         setLoading(false);
+<<<<<<< HEAD
         console.log(skip, more, loading);
+=======
+        showResults(filters);
+>>>>>>> chat
       })
       .catch((err) => alert(err));
   };
 
+<<<<<<< HEAD
   const { user, setUser } = useContext(UserContext);
   const [more, setMore] = useState(true);
   const [loading, setLoading] = useState(false);
   const [state, setState] = useState([]);
   const [skip, setSkip] = useState(0);
   const [element, setElement] = useState(null);
+=======
+>>>>>>> chat
   const loader = useRef(fetchData);
 
   const observer = useRef(
@@ -57,6 +94,7 @@ const Home = () => {
 
   useEffect(() => {
     loader.current = fetchData;
+<<<<<<< HEAD
 
     const instance = axios.create({
       baseURL: baseUrl,
@@ -65,6 +103,11 @@ const Home = () => {
       },
     });
 
+=======
+  }, [fetchData]);
+
+  useEffect(() => {
+>>>>>>> chat
     const currentElement = element;
     const currentObserver = observer.current;
 
@@ -79,6 +122,7 @@ const Home = () => {
     };
   }, [element]);
 
+<<<<<<< HEAD
   const createPost = (post) => {
     return (
       <>
@@ -112,6 +156,31 @@ const Home = () => {
         </div>
       </>
     );
+=======
+  const showResults = (fil) => {
+    if (fil.length > 0) {
+      setFilteredList(state.filter((post) => fil.includes(post.category)));
+    } else {
+      setFilteredList(state);
+    }
+  };
+
+  const handleFilters = (fil) => {
+    const newFilters = fil;
+    showResults(newFilters);
+    setFilters(newFilters);
+  };
+
+  const handleOrder = (order) => {
+    if (order.value !== setSortOder.value) {
+      setSortOder(order);
+      setLoading(false);
+      setMore(true);
+      setSkip(0);
+      setState([]);
+      setFilteredList([]);
+    }
+>>>>>>> chat
   };
 
   if (!user.token || user.expired) {
@@ -136,6 +205,7 @@ const Home = () => {
           className="title text-center"
           style={{ fontFamily: "Dancing Script", fontWeight: "bold" }}
         >
+<<<<<<< HEAD
           <h1>The Latest Posts!</h1>
         </div>
         <div
@@ -143,6 +213,25 @@ const Home = () => {
           id="post-container"
         >
           {state.length > 0 && state.map((post) => createPost(post))}
+=======
+          <h1>Listings</h1>
+        </div>
+        <div className="filter">
+          <Filter
+            handleFilters={(filters) => handleFilters(filters, "Category")}
+            handleOrder={handleOrder}
+            customStyle={filteredList.length === 0 ? { display: "none" } : {}}
+          />
+        </div>
+        <div
+          className="col row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4"
+          id="post-container"
+        >
+          {filteredList.length > 0 &&
+            filteredList.map((post, index) => (
+              <Card post={post} index={index} />
+            ))}
+>>>>>>> chat
 
           {!loading && more ? (
             <div ref={setElement} style={{ padding: "2rem" }}></div>
