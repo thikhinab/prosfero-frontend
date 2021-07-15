@@ -30,6 +30,8 @@ const Card = ({ post, index }) => {
           <small className="text-muted">
             {new Date(post.createdAt).toUTCString()}
           </small>
+          <hr />
+          <small>{post.location?.label}</small>
         </div>
       </div>
     </div>

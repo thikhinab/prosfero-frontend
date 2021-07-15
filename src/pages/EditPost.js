@@ -5,13 +5,42 @@ import "../style/CreatePost.css";
 import axios from "axios";
 import { Redirect } from "react-router";
 import { useHistory, useParams } from "react-router-dom";
+import LocationSelect from "../components/LocationSelect";
+import { FetchLocations } from "../utils/FetchLocations";
 
 const EditPost = () => {
   const { postId } = useParams();
 
-  const url = `http://localhost:5000/api/v1/posts/${postId}`;
+  const url = `http://localhost:5000/api/v1/posts/single/${postId}`;
+  const editURL = `http://localhost:5000/api/v1/posts/${postId}`;
 
   const [state, setState] = useState("");
+  const [suggestions, setSuggestions] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [menuIsOpen, setMenuIsOpen] = useState(false);
+
+  const getSuggestions = async (word) => {
+    if (word) {
+      setLoading(true);
+      let response = await FetchLocations(word);
+      setSuggestions(response);
+      setLoading(false);
+      setMenuIsOpen(true);
+    } else {
+      setSuggestions([]);
+      setMenuIsOpen(false);
+    }
+  };
+
+  const onSelect = (object) => {
+    const newState = { ...state };
+    newState["location"] = {
+      label: object.label,
+      lon: object.lon,
+      lan: object.lan,
+    };
+    setState(newState);
+  };
 
   useEffect(() => {
     axios
@@ -25,10 +54,10 @@ const EditPost = () => {
           alert("Unathorized");
           history.push("/home");
         }
-
         setState(res.data);
       })
       .catch((err) => {
+        console.log(err);
         alert(err);
         history.push("/home");
       });
@@ -84,12 +113,13 @@ const EditPost = () => {
 
     axios
       .put(
-        url,
+        editURL,
         {
           title: state.title,
           desc: state.desc,
           category: state.category,
           image: state.image,
+          location: state.location,
         },
         {
           headers: {
@@ -99,7 +129,6 @@ const EditPost = () => {
       )
       .then((res) => {
         alert("Post updated!");
-        console.log(res.data);
         history.push(`/post/${postId}`);
       })
       .catch((err) => alert(err));
@@ -145,6 +174,20 @@ const EditPost = () => {
               <option value="Furniture">Furniture</option>
               <option value="Other">Other</option>
             </select>
+          </div>
+          <div className="mb-3">
+            <label htmlFor="description" className="form-label">
+              Location
+            </label>
+            <LocationSelect
+              defaultValue={state.location}
+              loading={loading}
+              requests={getSuggestions}
+              suggestions={suggestions}
+              menuIsOpen={menuIsOpen}
+              onSelect={onSelect}
+              placeholder={"Please type in a location"}
+            />
           </div>
           <div className="mb-3">
             <label htmlFor="description" className="form-label">

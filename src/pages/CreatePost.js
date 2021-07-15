@@ -5,6 +5,8 @@ import "../style/CreatePost.css";
 import axios from "axios";
 import { Redirect } from "react-router";
 import { useHistory } from "react-router-dom";
+import { FetchLocations } from "../utils/FetchLocations";
+import LocationSelect from "../components/LocationSelect";
 
 const CreatePost = () => {
   const { user, setUser } = useContext(UserContext);
@@ -20,6 +22,28 @@ const CreatePost = () => {
     description: "",
     image: "",
   });
+  const [suggestions, setSuggestions] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [menuIsOpen, setMenuIsOpen] = useState(false);
+  const [selected, setSelected] = useState(null);
+
+  const getSuggestions = async (word) => {
+    if (word) {
+      setLoading(true);
+      let response = await FetchLocations(word);
+
+      setSuggestions(response);
+      setLoading(false);
+      setMenuIsOpen(true);
+    } else {
+      setSuggestions([]);
+      setMenuIsOpen(false);
+    }
+  };
+
+  const onSelect = (object) => {
+    setSelected(object);
+  };
 
   const fileSelectedHandler = (e) => {
     setImage({
@@ -70,6 +94,11 @@ const CreatePost = () => {
           desc: state.description,
           category: state.category,
           image: state.image,
+          location: {
+            label: selected.label,
+            lon: selected.lon,
+            lat: selected.lat,
+          },
         },
         {
           headers: {
@@ -138,6 +167,19 @@ const CreatePost = () => {
               <option value="Furniture">Furniture</option>
               <option value="Other">Other</option>
             </select>
+          </div>
+          <div className="mb-3">
+            <label htmlFor="description" className="form-label">
+              Location
+            </label>
+            <LocationSelect
+              loading={loading}
+              requests={getSuggestions}
+              suggestions={suggestions}
+              menuIsOpen={menuIsOpen}
+              onSelect={onSelect}
+              placeholder={"Please type in a location"}
+            />
           </div>
           <div className="mb-3">
             <label htmlFor="description" className="form-label">

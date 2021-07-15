@@ -61,6 +61,7 @@ const Post = () => {
         },
       })
       .then((res) => {
+        console.log(res.data);
         setState(res.data);
       })
       .catch((err) => {
@@ -107,10 +108,15 @@ const Post = () => {
               <h5>Posted by: {state.username}</h5>
               <hr />
               <p>{state.desc}</p>
+              <p>
+                <strong>Location:</strong> <br />
+                {state.location?.label}
+              </p>
               <hr />
               <p>Category: {state.category}</p>
               <p>Created at: {new Date(state.createdAt).toUTCString()}</p>
               <div className="text-center">
+                {console.log(user.id, state.userid)}
                 {state.userid === user.id ? (
                   <Link class="btn btn-primary" to={`/editpost/${postId}`}>
                     Edit

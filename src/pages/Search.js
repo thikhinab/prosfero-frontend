@@ -77,6 +77,7 @@ const Search = () => {
 
   useEffect(() => {
     setState([]);
+    setFilteredList([]);
     setSkip(0);
     setMore(true);
     setLoading(false);
