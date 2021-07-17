@@ -177,6 +177,25 @@ const Profile = () => {
       .catch((err) => alert(err));
   };
 
+  const startConversation = (receiverId) => {
+    const instance = axios.create({
+      baseURL: "http://localhost:5000/api/v1",
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    });
+
+    instance
+      .post(`/conversations`, {
+        senderId: user.id,
+        receiverId,
+      })
+      .then((res) => {
+        history.push("/chat");
+      })
+      .catch((err) => alert(err));
+  };
+
   const createReqData = (reqData) => {
     if (reqData[5] === "approved") {
       return (
@@ -188,6 +207,12 @@ const Profile = () => {
             </p>
             <p className="card-text">Contact them at {reqData[4]}</p>
           </div>
+          <button
+            className="btn btn-primary"
+            onClick={() => startConversation(reqData[6])}
+          >
+            Start Conversation
+          </button>
         </div>
       );
     } else if (reqData[5] === "declined") {

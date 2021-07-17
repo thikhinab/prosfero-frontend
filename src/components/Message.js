@@ -1,14 +1,13 @@
+import { format } from "timeago.js";
 import "./../style/Message.css";
 
-const Message = ({ own }) => {
+const Message = ({ message, own }) => {
   return (
     <div className={own ? "message own" : "message"}>
       <div className="message-cover">
-        <div className="message-text">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit.
-        </div>
+        <div className="message-text">{message.text}</div>
       </div>
-      <div className="message-meta">1 hour ago</div>
+      <div className="message-meta">{format(message.createdAt)}</div>
     </div>
   );
 };

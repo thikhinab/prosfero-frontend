@@ -1,13 +1,115 @@
-import { useContext } from "react";
+import axios from "axios";
+import { useContext, useState, useEffect, useRef } from "react";
 import { Redirect } from "react-router";
 import Conversation from "../components/Conversation";
 import Message from "../components/Message";
 import NavigationBar from "../components/NavigationBar";
 import { UserContext } from "../utils/UserContext";
+import { io } from "socket.io-client";
 import "./../style/Chat.css";
 
 const Chat = () => {
   const { user, setUser } = useContext(UserContext);
+  const [conversations, setConversations] = useState([]);
+  const [currentChat, setCurrentChat] = useState(null);
+  const [messages, setMessages] = useState([]);
+  const [newMessage, setNewMessage] = useState("");
+  const [arrivalMessage, setArrivalMessage] = useState(null);
+  const scrollRef = useRef();
+  const [chatUsername, setChatUsername] = useState("");
+  const socket = useRef();
+
+  useEffect(() => {
+    socket.current = io("ws://localhost:8900");
+    socket.current.on("getMessage", (data) => {
+      setArrivalMessage({
+        sender: data.senderId,
+        text: data.text,
+        createdAt: Date.now(),
+      });
+    });
+  }, []);
+
+  useEffect(() => {
+    arrivalMessage &&
+      currentChat?.members.includes(arrivalMessage.sender) &&
+      setMessages((prev) => [...prev, arrivalMessage]);
+  }, [arrivalMessage]);
+
+  useEffect(() => {
+    socket.current.emit("addUser", user.id);
+  }, [user]);
+
+  useEffect(() => {
+    const getConversations = async () => {
+      try {
+        const res = await axios.get(
+          `http://localhost:5000/api/v1/conversations/${user.id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${user.token}`,
+            },
+          }
+        );
+        setConversations(res.data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    getConversations();
+  }, [user.id]);
+
+  useEffect(() => {
+    const getMessages = async () => {
+      try {
+        const res = await axios.get(
+          `http://localhost:5000/api/v1/messages/${currentChat?._id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${user.token}`,
+            },
+          }
+        );
+        setMessages(res.data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    getMessages();
+  }, [currentChat]);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const message = {
+      sender: user.id,
+      text: newMessage,
+      conversationId: currentChat._id,
+    };
+
+    const recieverId = currentChat.members.find((member) => member !== user.id);
+
+    socket.current.emit("sendMessage", {
+      senderId: user.id,
+      recieverId,
+      text: newMessage,
+    });
+
+    try {
+      const instance = axios.create({
+        baseURL: `http://localhost:5000/api/v1/messages`,
+        headers: { Authorization: `Bearer ${user.token}` },
+      });
+      const res = await instance.post(``, message);
+      setMessages([...messages, res.data]);
+      setNewMessage("");
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  useEffect(() => {
+    scrollRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
 
   if (!user.token || user.expired) {
     return <Redirect to="/login" />;
@@ -37,29 +139,81 @@ const Chat = () => {
           >
             <h3>Conversations</h3>
             <hr />
-            <Conversation />
-            <Conversation />
-            <Conversation />
+            {conversations.map((c) => {
+              return (
+                <div
+                  key={c._id}
+                  onClick={() => {
+                    setCurrentChat(c);
+                  }}
+                >
+                  <Conversation
+                    conversation={c}
+                    currentUser={user}
+                    onCustomClick={(name) => setChatUsername(name)}
+                  />
+                </div>
+              );
+            })}
           </div>
           <div className="chatbox">
-            <h3>John</h3>
-            <hr />
+            {chatUsername !== "" && (
+              <>
+                <h3>{chatUsername}</h3>
+                <hr />
+              </>
+            )}
+
             <div className="chatbox-wrapper">
-              <div className="chat-window">
-                <Message />
-                <Message own={true} />
-                <Message />
-                <Message />
-                <Message />
-              </div>
-              <div className="chat-input">
-                <textarea className="chat-input-textarea" rows="3" />
-                <div className="button-wrapper">
-                  <button className="chat-input-button btn btn-primary">
-                    Send
-                  </button>
+              {currentChat ? (
+                <>
+                  <div className="chat-window">
+                    {messages.length === 0 && (
+                      <div
+                        className="text-center"
+                        style={{ marginTop: "2rem" }}
+                      >
+                        <span className="text-muted">No messages yet</span>
+                      </div>
+                    )}
+                    {messages.map((m) => {
+                      return (
+                        <div ref={scrollRef} key={m._id}>
+                          <Message message={m} own={m.sender === user.id} />
+                        </div>
+                      );
+                    })}
+                  </div>
+                  <div className="chat-input">
+                    <textarea
+                      className="chat-input-textarea"
+                      rows="3"
+                      value={newMessage}
+                      onChange={(e) => setNewMessage(e.target.value)}
+                    />
+                    <div className="button-wrapper">
+                      <button
+                        className="chat-input-button btn btn-primary"
+                        onClick={handleSubmit}
+                      >
+                        Send
+                      </button>
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <div
+                  className="text-center"
+                  style={{
+                    fontSize: "3rem",
+                    color: "lightgrey",
+                    marginTop: "6rem",
+                    height: "65vh",
+                  }}
+                >
+                  <span>Open a conversation to start a chart</span>
                 </div>
-              </div>
+              )}
             </div>
           </div>
         </div>

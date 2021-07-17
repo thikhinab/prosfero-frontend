@@ -58,6 +58,11 @@ const NavigationBar = ({ loggedin, func: logout }) => {
                   </Link>
                 </li>
                 <li className="nav-item">
+                  <Link className="nav-link" to="/chat">
+                    Chat
+                  </Link>
+                </li>
+                <li className="nav-item">
                   <span
                     className="nav-link"
                     onClick={() => {
