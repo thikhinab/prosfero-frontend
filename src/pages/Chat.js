@@ -1,5 +1,7 @@
 import { useContext } from "react";
 import { Redirect } from "react-router";
+import Conversation from "../components/Conversation";
+import Message from "../components/Message";
 import NavigationBar from "../components/NavigationBar";
 import { UserContext } from "../utils/UserContext";
 import "./../style/Chat.css";
@@ -26,8 +28,40 @@ const Chat = () => {
       />
       <div className="container">
         <div className="chat">
-          <div className="sidebar"></div>
-          <div className="chatbox"></div>
+          <div
+            className="sidebar"
+            style={{
+              backgroundColor: "#e6f5ff",
+              borderRadius: "1rem",
+            }}
+          >
+            <h3>Conversations</h3>
+            <hr />
+            <Conversation />
+            <Conversation />
+            <Conversation />
+          </div>
+          <div className="chatbox">
+            <h3>John</h3>
+            <hr />
+            <div className="chatbox-wrapper">
+              <div className="chat-window">
+                <Message />
+                <Message own={true} />
+                <Message />
+                <Message />
+                <Message />
+              </div>
+              <div className="chat-input">
+                <textarea className="chat-input-textarea" rows="3" />
+                <div className="button-wrapper">
+                  <button className="chat-input-button btn btn-primary">
+                    Send
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </>
