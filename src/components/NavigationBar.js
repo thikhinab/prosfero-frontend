@@ -30,6 +30,9 @@ const NavigationBar = ({loggedin, func: logout }) => {
                     <a className="nav-link" href="/createpost">Create Post</a>
                     </li>
                     <li className="nav-item">
+                    <a className="nav-link" href="/telebot">Telebot</a>
+                    </li>
+                    <li className="nav-item">
                     <span className="nav-link" onClick={() => { 
                     logout()
                     history.push('/login')

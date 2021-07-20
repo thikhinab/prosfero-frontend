@@ -12,6 +12,7 @@ import Home from './pages/Home';
 import Post from './pages/Post'
 import EditPost from './pages/EditPost'
 import YourRequests from './pages/YourRequests'
+import Telebot from './pages/Telebot'
 
 function App() {
 
@@ -38,6 +39,7 @@ function App() {
           <Route path= '/post/:postId'exact component={Post} />
           <Route path='/editpost/:postId' exact component={EditPost} />
           <Route path='/requests' exact component={YourRequests} />
+          <Route path='/telebot' exact component={Telebot} />
           <Route path='/' component={WelcomeRouter} />
         </Switch>
       </Router>
