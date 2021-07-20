@@ -25,7 +25,11 @@ const CreatePost = () => {
   const [suggestions, setSuggestions] = useState([]);
   const [loading, setLoading] = useState(false);
   const [menuIsOpen, setMenuIsOpen] = useState(false);
-  const [selected, setSelected] = useState(null);
+  const [selected, setSelected] = useState({
+    label: "",
+    lon: "",
+    lat: "",
+  });
 
   const getSuggestions = async (word) => {
     if (word) {

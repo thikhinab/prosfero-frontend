@@ -1,13 +1,22 @@
+@media (min-width: 992px) {
+  .toggle-wrapper {
+    display: none;
+  }
+}
+.chat-toggle {
+  cursor: pointer;
+}
+
 .chat {
-  width: 70vw;
-  min-height: 80vh;
+  /* max-width: 70vw; */
+  /* min-height: 80vh; */
   margin: 1rem;
   background-color: white;
   border-radius: 1rem;
   border-style: solid;
   border-color: white;
   box-shadow: 0px 4px 1px rgba(0, 0, 0, 0.25);
-  display: flex;
+  /*   display: flex; */
 }
 
 .sidebar {
@@ -16,6 +25,7 @@
 }
 
 .chatbox {
+  max-width: 50vw;
   flex: 4;
   padding: 1rem;
 }

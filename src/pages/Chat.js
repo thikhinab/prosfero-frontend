@@ -6,6 +6,8 @@ import Message from "../components/Message";
 import NavigationBar from "../components/NavigationBar";
 import { UserContext } from "../utils/UserContext";
 import { io } from "socket.io-client";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import ExpandLessIcon from "@material-ui/icons/ExpandLess";
 import "./../style/Chat.css";
 
 const Chat = () => {
@@ -17,7 +19,20 @@ const Chat = () => {
   const [arrivalMessage, setArrivalMessage] = useState(null);
   const scrollRef = useRef();
   const [chatUsername, setChatUsername] = useState("");
+  const [expanded, setExpanded] = useState(true);
   const socket = useRef();
+
+  useEffect(() => {
+    const setExpandValue = () => {
+      if (window.innerWidth > 992) {
+        setExpanded(true);
+      } else {
+        setExpanded(false);
+      }
+    };
+
+    window.addEventListener("resize", setExpandValue);
+  }, []);
 
   useEffect(() => {
     socket.current = io("ws://localhost:8900");
@@ -128,38 +143,66 @@ const Chat = () => {
           });
         }}
       />
-      <div className="container">
-        <div className="chat">
+      <div className="container" style={{ margin: "auto", padding: "1rem" }}>
+        <div className="chat row">
           <div
-            className="sidebar"
+            className="col-lg-3 xcxcsidebar"
             style={{
               backgroundColor: "#e6f5ff",
               borderRadius: "1rem",
+              padding: "1rem",
             }}
           >
-            <h3>Conversations</h3>
-            <hr />
-            {conversations.map((c) => {
-              return (
-                <div
-                  key={c._id}
-                  onClick={() => {
-                    setCurrentChat(c);
-                  }}
-                >
-                  <Conversation
-                    conversation={c}
-                    currentUser={user}
-                    onCustomClick={(name) => setChatUsername(name)}
-                  />
+            <div className="container">
+              <div className="row">
+                <div className="col">
+                  <h3>Conversations</h3>
                 </div>
-              );
-            })}
+                {expanded ? (
+                  <div className="col-3 toggle-wrapper">
+                    <ExpandLessIcon
+                      className="chat-toggle"
+                      onClick={() => setExpanded((prev) => !prev)}
+                    />
+                  </div>
+                ) : (
+                  <div className="col-3 toggle-wrapper">
+                    <ExpandMoreIcon
+                      className="chat-toggle"
+                      onClick={() => setExpanded((prev) => !prev)}
+                    />
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <hr />
+            <div
+              className="toggleConversation"
+              style={{ display: !expanded && "none" }}
+            >
+              {conversations.map((c) => {
+                return (
+                  <div
+                    key={c._id}
+                    onClick={() => {
+                      setCurrentChat(c);
+                    }}
+                  >
+                    <Conversation
+                      conversation={c}
+                      currentUser={user}
+                      onCustomClick={(name) => setChatUsername(name)}
+                    />
+                  </div>
+                );
+              })}
+            </div>
           </div>
-          <div className="chatbox">
+          <div className="col cxcxchatbox">
             {chatUsername !== "" && (
               <>
-                <h3>{chatUsername}</h3>
+                <h3 style={{ paddingTop: "1rem" }}>{chatUsername}</h3>
                 <hr />
               </>
             )}
