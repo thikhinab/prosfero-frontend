@@ -14,6 +14,7 @@ import EditPost from "./pages/EditPost";
 import Search from "./pages/Search";
 import Chat from "./pages/Chat";
 import YourRequests from "./pages/YourRequests";
+import Telebot from "./pages/Telebot";
 
 function App() {
   // Is this fecthing the token in each render??
@@ -38,6 +39,7 @@ function App() {
           <Route path="/editpost/:postId" exact component={EditPost} />
           <Route path="/chat" exact component={Chat} />
           <Route path="/requests" exact component={YourRequests} />
+          <Route path="/telebot" exact component={Telebot} />
           <Route path="/search" component={Search} />
           <Route path="/" component={WelcomeRouter} />
         </Switch>
